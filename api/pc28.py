@@ -4,7 +4,7 @@ import json
 
 def handler(request):
     try:
-        # 抓取 52pc28.com 的加拿大 PC28 最新一期
+        # 请求 52pc28.com 获取最新一期数据
         url = "https://www.52pc28.com/lottery/getLatest?game=jnd28"
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -33,7 +33,7 @@ def handler(request):
                 }
             }
         else:
-            raise Exception("Invalid data")
+            raise Exception("Invalid response from source")
 
     except Exception as e:
         return {
