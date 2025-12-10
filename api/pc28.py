@@ -2,48 +2,45 @@
 import requests
 import json
 
-def pc28(request):
-    # 抓取 52pc28.com 的加拿大 PC28 最新一期数据
-    SOURCE_URL = "https://www.52pc28.com/lottery/getLatest?game=jnd28"
-    
+def handler(request):
     try:
+        # 抓取 52pc28.com 的加拿大 PC28 最新一期
+        url = "https://www.52pc28.com/lottery/getLatest?game=jnd28"
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Referer": "https://www.52pc28.com/",
-            "Accept": "application/json"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Referer": "https://www.52pc28.com/"
         }
-        r = requests.get(SOURCE_URL, timeout=10, headers=headers)
-        r.raise_for_status()
-        data = r.json()
-        
+        resp = requests.get(url, headers=headers, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+
         if data.get("code") == 200 and "data" in data:
             raw = data["data"]
-            numbers = [int(x) for x in raw["opencode"].split(",")]
+            nums = [int(x) for x in raw["opencode"].split(",")]
             issue = raw["expect"]
-            total = sum(numbers)
-            
-            result = {
-                "issue": issue,
-                "numbers": numbers,
-                "sum": total
-            }
-            return (
-                json.dumps(result, ensure_ascii=False),
-                200,
-                {
+            total = sum(nums)
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "issue": issue,
+                    "numbers": nums,
+                    "sum": total
+                }, ensure_ascii=False),
+                "headers": {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*"
                 }
-            )
+            }
         else:
-            raise Exception("Invalid response from source")
-            
+            raise Exception("Invalid data")
+
     except Exception as e:
-        return (
-            json.dumps({"error": str(e)}),
-            500,
-            {
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)}),
+            "headers": {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*"
             }
-        )
+        }
