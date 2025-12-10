@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>白羊国际城PC28开奖记录</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', sans-serif;
+    }
+
+    :root {
+      --neon: #00f7ff;
+      --bg: #02040a;
+      --panel-bg: rgba(8, 12, 24, 0.85);
+      --text: #e0ffff;
+      --text-muted: #6ab0b0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 扫描线背景 */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: 
+        repeating-linear-gradient(0deg, 
+          rgba(0, 247, 255, 0.03) 0px, 
+          rgba(0, 247, 255, 0.03) 1px, 
+          transparent 1px, 
+          transparent 30px);
+      z-index: -2;
+    }
+
+    #scan-line {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 2px;
+      background: linear-gradient(to right, transparent, var(--neon), transparent);
+      box-shadow: 0 0 10px var(--neon), 0 0 20px rgba(0, 247, 255, 0.5);
+      z-index: -1;
+      animation: scan 7s linear infinite;
+    }
+    @keyframes scan {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .main-title {
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: white;
+      text-shadow: 0 0 12px var(--neon), 0 0 24px rgba(0, 247, 255, 0.7);
+      letter-spacing: 2px;
+    }
+
+    /* 文字广告样式 */
+    .ad-text-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 90px;
+      background: rgba(8, 12, 24, 0.85);
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--neon);
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0, 247, 255, 0.6);
+    }
+    .ad-text-card:hover {
+      border-color: var(--neon);
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.4);
+      transform: scale(1.02);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px 1fr;
+      gap: 20px;
+      margin: 16px 0;
+    }
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid rgba(0, 247, 255, 0.25);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .panel.clickable {
+      cursor: pointer;
+    }
+    .panel.clickable:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 247, 255, 0.6);
+      box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+    }
+
+    .panel-title {
+      color: var(--neon);
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .core-display {
+      text-align: center;
+      padding: 24px 0;
+    }
+    .core-number {
+      font-size: 5rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 15px var(--neon), 0 0 30px rgba(0, 247, 255, 0.8);
+      margin: 20px 0;
+      letter-spacing: 5px;
+    }
+    .core-detail {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+
+    .history-list {
+      max-height: 500px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+    }
+    .history-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .history-list::-webkit-scrollbar-thumb {
+      background: var(--neon);
+      border-radius: 3px;
+    }
+    .history-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .history-row:last-child {
+      border-bottom: none;
+    }
+    .issue-col { color: var(--neon); font-weight: bold; }
+    .balls-col { color: var(--text-muted); }
+    .sum-col {
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .sum-0-8 { background: rgba(255, 50, 50, 0.2); color: #ff6666; }
+    .sum-9-13 { background: rgba(255, 180, 0, 0.2); color: #ffcc00; }
+    .sum-14-18 { background: rgba(50, 255, 100, 0.2); color: #66ff99; }
+    .sum-19-27 { background: rgba(0, 200, 255, 0.2); color: #66eeff; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .stat-item {
+      background: rgba(0, 30, 40, 0.4);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--neon);
+    }
+
+    .contact-note {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: #ff66cc;
+      text-shadow: 0 0 8px rgba(255, 102, 204, 0.6);
+      animation: pulse 2s infinite;
+    }
+    .contact-note .highlight {
+      font-weight: bold;
+      color: #ff00ff;
+      letter-spacing: 1px;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="scan-line"></div>
+  <div class="container">
+    
+    <h1 class="main-title">白羊国际城PC28开奖记录</h1>
+
+    <!-- 顶部文字广告 -->
+    <a href="https://t.me/baixiansen8" target="_blank" style="display: block; margin: 16px 0;">
+      <div class="ad-text-card">
+        【广告位招租】联系 @baixiansen8
+      </div>
+    </a>
+
+    <div class="main-grid">
+      <!-- 左侧：开奖记录 -->
+      <div class="panel">
+        <div class="panel-title">近期开奖记录</div>
+        <div class="history-list" id="history-list"></div>
+      </div>
+
+      <!-- 中央：动态开奖（可点击跳转） -->
+      <div 
+        class="panel clickable" 
+        onclick="window.open('https://t.me/baixiansen8', '_blank')"
+        title="点击进入白羊国际城"
+      >
+        <div class="panel-title">最新一期开奖</div>
+        <div class="core-display">
+          <div class="core-number" id="current-sum">--</div>
+          <div class="core-detail">期号：<span id="current-issue">------</span></div>
+          <div class="core-detail" id="current-balls">-- + -- + --</div>
+        </div>
+      </div>
+
+      <!-- 右侧：趋势统计 -->
+      <div class="panel">
+        <div class="panel-title">实时数据统计</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">最热和值</div>
+            <div class="stat-value" id="stat-hot">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">最冷和值</div>
+            <div class="stat-value" id="stat-cold">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">奇数比例</div>
+            <div class="stat-value" id="stat-odd">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">偶数比例</div>
+            <div class="stat-value" id="stat-even">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">大数比例</div>
+            <div class="stat-value" id="stat-big">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">小数比例</div>
+            <div class="stat-value" id="stat-small">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">平均和值</div>
+            <div class="stat-value" id="stat-avg">--</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">近期跨度</div>
+            <div class="stat-value" id="stat-span">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部文字广告 -->
+    <a href="https://t.me/baixiansen8" target="_blank" style="display: block; margin: 16px 0;">
+      <div class="ad-text-card">
+        【广告位招租】联系 @baixiansen8
+      </div>
+    </a>
+
+    <!-- 联系提示（可保留或删除） -->
+    <div class="contact-note">
+      广告合作请联系 <span class="highlight">@baixiansen8</span>
+    </div>
+
+    <footer>
+      © 2025 白羊国际城 • PC28开奖数据实时更新
+    </footer>
+  </div>
+
+  <script>
+    function generateData() {
+      const history = [];
+      let periodBase = 3243922;
+      const freq = new Array(28).fill(0);
+      let totalSum = 0, odd = 0, even = 0, big = 0, small = 0;
+
+      for (let i = 0; i < 100; i++) {
+        const a = Math.floor(Math.random() * 10);
+        const b = Math.floor(Math.random() * 10);
+        const c = Math.floor(Math.random() * 10);
+        const sum = a + b + c;
+        totalSum += sum;
+        freq[sum]++;
+
+        if (sum % 2 === 1) odd++; else even++;
+        if (sum >= 14) big++; else small++;
+
+        history.push({ period: periodBase - i, a, b, c, sum });
+      }
+
+      let hot = 0, cold = 0;
+      for (let i = 1; i <= 27; i++) {
+        if (freq[i] > freq[hot]) hot = i;
+        if (freq[i] < freq[cold]) cold = i;
+      }
+
+      const avg = (totalSum / 100).toFixed(1);
+      const recent = history.slice(0, 20);
+      const span = Math.max(...recent.map(h => h.sum)) - Math.min(...recent.map(h => h.sum));
+
+      return {
+        latest: history[0],
+        history: history.slice(0, 50),
+        stats: {
+          hot: String(hot).padStart(2, '0'),
+          cold: String(cold).padStart(2, '0'),
+          odd: `${Math.round(odd / 100 * 100)}%`,
+          even: `${Math.round(even / 100 * 100)}%`,
+          big: `${Math.round(big / 100 * 100)}%`,
+          small: `${Math.round(small / 100 * 100)}%`,
+          avg,
+          span
+        }
+      };
+    }
+
+    function updateCore(data) {
+      const { a, b, c, sum, period } = data;
+      const sumEl = document.getElementById('current-sum');
+      sumEl.style.opacity = '0';
+      setTimeout(() => {
+        sumEl.textContent = String(sum).padStart(2, '0');
+        sumEl.style.opacity = '1';
+        sumEl.style.textShadow = '0 0 15px var(--neon), 0 0 30px rgba(0, 247, 255, 0.8)';
+        document.getElementById('current-issue').textContent = period;
+        document.getElementById('current-balls').textContent = `${a} + ${b} + ${c}`;
+      }, 300);
+    }
+
+    function renderHistory(history) {
+      const getSumClass = (sum) => {
+        if (sum <= 8) return 'sum-0-8';
+        if (sum <= 13) return 'sum-9-13';
+        if (sum <= 18) return 'sum-14-18';
+        return 'sum-19-27';
+      };
+
+      const html = history.map(item => `
+        <div class="history-row">
+          <div class="issue-col">第${item.period}期</div>
+          <div class="balls-col">${item.a}+${item.b}+${item.c}</div>
+          <div class="sum-col ${getSumClass(item.sum)}">${item.sum}</div>
+        </div>
+      `).join('');
+      document.getElementById('history-list').innerHTML = html;
+    }
+
+    function renderStats(stats) {
+      Object.entries(stats).forEach(([key, value]) => {
+        const el = document.getElementById(`stat-${key}`);
+        if (el) el.textContent = value;
+      });
+    }
+
+    window.addEventListener('load', () => {
+      const data = generateData();
+      updateCore(data.latest);
+      renderHistory(data.history);
+      renderStats(data.stats);
+
+      setInterval(() => {
+        const a = Math.floor(Math.random() * 10);
+        const b = Math.floor(Math.random() * 10);
+        const c = Math.floor(Math.random() * 10);
+        const sum = a + b + c;
+        const period = String(Number(document.getElementById('current-issue').textContent) + 1);
+        updateCore({ a, b, c, sum, period });
+
+        const newRow = `
+          <div class="history-row">
+            <div class="issue-col">第${period}期</div>
+            <div class="balls-col">${a}+${b}+${c}</div>
+            <div class="sum-col ${sum <= 8 ? 'sum-0-8' : sum <= 13 ? 'sum-9-13' : sum <= 18 ? 'sum-14-18' : 'sum-19-27'}">${sum}</div>
+          </div>
+        `;
+        const list = document.getElementById('history-list');
+        list.innerHTML = newRow + list.innerHTML;
+        if (list.children.length > 50) list.removeChild(list.lastChild);
+      }, 10000);
+    });
+  </script>
+</body>
+</html>
