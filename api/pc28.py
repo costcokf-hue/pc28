@@ -10,7 +10,7 @@ def handler(request):
         )
         with urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode())
-        
+
         if data["code"] == 200:
             nums = [int(x) for x in data["data"]["opencode"].split(",")]
             return {
