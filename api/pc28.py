@@ -1,15 +1,15 @@
 # api/pc28.py
 import json
-from urllib.request import urlopen, Request
+import requests
 
 def handler(request):
     try:
-        req = Request(
+        resp = requests.get(
             "https://www.52pc28.com/lottery/getLatest?game=jnd28",
-            headers={"User-Agent": "Mozilla/5.0"}
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=10
         )
-        with urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
+        data = resp.json()
 
         if data["code"] == 200:
             nums = [int(x) for x in data["data"]["opencode"].split(",")]
