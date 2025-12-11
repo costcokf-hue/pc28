@@ -323,6 +323,50 @@
   </div>
 
   <script>
+    // ===== 新增：获取真实 PC28 数据 =====
+    async function fetchRealData() {
+      try {
+        const proxy = 'https://api.allorigins.win/raw?url=';
+        const url = 'https://www.52pc28.com/lottery/getLatest?game=jnd28';
+        const resp = await fetch(proxy + encodeURIComponent(url));
+        
+        if (!resp.ok) throw new Error('网络请求失败');
+        const data = await resp.json();
+        
+        if (data.code !== 200 || !data.data) throw new Error('API 返回无效');
+
+        const nums = data.data.opencode.split(',').map(Number);
+        const sum = nums.reduce((a, b) => a + b, 0);
+        const issue = data.data.expect;
+
+        // 更新核心显示
+        updateCore({ a: nums[0], b: nums[1], c: nums[2], sum, period: issue });
+
+        // 显示历史（只显示最新一期）
+        document.getElementById('history-list').innerHTML = `
+          <div class="history-row">
+            <div class="issue-col">第${issue}期</div>
+            <div class="balls-col">${nums.join('+')}</div>
+            <div class="sum-col ${getSumClass(sum)}">${sum}</div>
+          </div>
+        `;
+
+        console.log('✅ 真实数据加载成功:', { issue, nums, sum });
+        return true;
+      } catch (err) {
+        console.warn('⚠️ 获取真实数据失败，使用模拟数据:', err.message);
+        return false;
+      }
+    }
+
+    function getSumClass(sum) {
+      if (sum <= 8) return 'sum-0-8';
+      if (sum <= 13) return 'sum-9-13';
+      if (sum <= 18) return 'sum-14-18';
+      return 'sum-19-27';
+    }
+
+    // ===== 保留你原有的函数 =====
     function generateData() {
       const history = [];
       let periodBase = 3243922;
@@ -383,13 +427,6 @@
     }
 
     function renderHistory(history) {
-      const getSumClass = (sum) => {
-        if (sum <= 8) return 'sum-0-8';
-        if (sum <= 13) return 'sum-9-13';
-        if (sum <= 18) return 'sum-14-18';
-        return 'sum-19-27';
-      };
-
       const html = history.map(item => `
         <div class="history-row">
           <div class="issue-col">第${item.period}期</div>
@@ -407,31 +444,21 @@
       });
     }
 
-    window.addEventListener('load', () => {
-      const data = generateData();
-      updateCore(data.latest);
-      renderHistory(data.history);
-      renderStats(data.stats);
+    // ===== 启动逻辑 =====
+    window.addEventListener('load', async () => {
+      // 先尝试加载真实数据
+      const success = await fetchRealData();
+      
+      if (!success) {
+        // 如果失败，用模拟数据
+        const fake = generateData();
+        updateCore(fake.latest);
+        renderHistory(fake.history);
+        renderStats(fake.stats);
+      }
 
-      setInterval(() => {
-        const a = Math.floor(Math.random() * 10);
-        const b = Math.floor(Math.random() * 10);
-        const c = Math.floor(Math.random() * 10);
-        const sum = a + b + c;
-        const period = String(Number(document.getElementById('current-issue').textContent) + 1);
-        updateCore({ a, b, c, sum, period });
-
-        const newRow = `
-          <div class="history-row">
-            <div class="issue-col">第${period}期</div>
-            <div class="balls-col">${a}+${b}+${c}</div>
-            <div class="sum-col ${sum <= 8 ? 'sum-0-8' : sum <= 13 ? 'sum-9-13' : sum <= 18 ? 'sum-14-18' : 'sum-19-27'}">${sum}</div>
-          </div>
-        `;
-        const list = document.getElementById('history-list');
-        list.innerHTML = newRow + list.innerHTML;
-        if (list.children.length > 50) list.removeChild(list.lastChild);
-      }, 10000);
+      // 每 30 秒刷新一次真实数据
+      setInterval(fetchRealData, 30000);
     });
   </script>
 </body>
