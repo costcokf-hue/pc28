@@ -1,30 +1,21 @@
 # api/pc28.py
 import json
-import requests
+import os
 
 def handler(request):
     try:
-        resp = requests.get(
-            "https://www.52pc28.com/lottery/getLatest?game=jnd28",
-            headers={"User-Agent": "Mozilla/5.0"},
-            timeout=10
-        )
-        data = resp.json()
-
-        if data["code"] == 200:
-            nums = [int(x) for x in data["data"]["opencode"].split(",")]
-            return {
-                "statusCode": 200,
-                "body": json.dumps({
-                    "issue": data["data"]["expect"],
-                    "numbers": nums,
-                    "sum": sum(nums)
-                }, ensure_ascii=False),
-                "headers": {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
+        # 读取本地 data.json
+        with open(os.path.join(os.path.dirname(__file__), '..', 'data.json'), 'r') as f:
+            data = json.load(f)
+        
+        return {
+            "statusCode": 200,
+            "body": json.dumps(data, ensure_ascii=False),
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
             }
+        }
     except Exception as e:
         return {
             "statusCode": 500,
