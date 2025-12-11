@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "api/pc28.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/pc28",
+      "dest": "api/pc28.py"
+    }
+  ]
+}
