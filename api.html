@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PC28 API</title>
+  <script>
+    // 假设我们已经抓取到了数据
+    const data = {
+      issue: "3370250",
+      numbers: [3, 8, 4],
+      sum: 15,
+      updated_at: "2025-12-11T12:00:00Z"
+    };
+
+    // 返回 JSON 数据
+    const json = JSON.stringify(data);
+    console.log(json);
+
+    // 输出到页面（用于调试）
+    document.write(`<pre>${json}</pre>`);
+  </script>
+</head>
+<body></body>
+</html>
