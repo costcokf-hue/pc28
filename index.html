@@ -71,7 +71,6 @@
       letter-spacing: 2px;
     }
 
-    /* 文字广告样式 */
     .ad-text-card {
       display: flex;
       align-items: center;
@@ -237,7 +236,6 @@
     
     <h1 class="main-title">白羊国际城PC28开奖记录</h1>
 
-    <!-- 顶部文字广告 -->
     <a href="https://t.me/baixiansen8" target="_blank" style="display: block; margin: 16px 0;">
       <div class="ad-text-card">
         【广告位招租】联系 @baixiansen8
@@ -245,13 +243,11 @@
     </a>
 
     <div class="main-grid">
-      <!-- 左侧：开奖记录 -->
       <div class="panel">
         <div class="panel-title">近期开奖记录</div>
         <div class="history-list" id="history-list"></div>
       </div>
 
-      <!-- 中央：动态开奖（可点击跳转） -->
       <div 
         class="panel clickable" 
         onclick="window.open('https://t.me/baixiansen8', '_blank')"
@@ -265,7 +261,6 @@
         </div>
       </div>
 
-      <!-- 右侧：趋势统计 -->
       <div class="panel">
         <div class="panel-title">实时数据统计</div>
         <div class="stats-grid">
@@ -305,14 +300,12 @@
       </div>
     </div>
 
-    <!-- 底部文字广告 -->
     <a href="https://t.me/baixiansen8" target="_blank" style="display: block; margin: 16px 0;">
       <div class="ad-text-card">
         【广告位招租】联系 @baixiansen8
       </div>
     </a>
 
-    <!-- 联系提示（可保留或删除） -->
     <div class="contact-note">
       广告合作请联系 <span class="highlight">@baixiansen8</span>
     </div>
@@ -323,40 +316,79 @@
   </div>
 
   <script>
-    // ===== 新增：获取真实 PC28 数据 =====
-    async function fetchRealData() {
+    // 获取真实历史数据（50期）
+    async function fetchRealHistory() {
       try {
         const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = 'https://www.52pc28.com/lottery/getLatest?game=jnd28';
+        const url = 'https://www.52pc28.com/lottery/getHistory?game=jnd28&limit=50';
         const resp = await fetch(proxy + encodeURIComponent(url));
         
-        if (!resp.ok) throw new Error('网络请求失败');
-        const data = await resp.json();
+        if (!resp.ok) throw new Error('网络失败');
+        const result = await resp.json();
         
-        if (data.code !== 200 || !data.data) throw new Error('API 返回无效');
+        if (result.code !== 200 || !Array.isArray(result.data)) 
+          throw new Error('数据格式错误');
 
-        const nums = data.data.opencode.split(',').map(Number);
-        const sum = nums.reduce((a, b) => a + b, 0);
-        const issue = data.data.expect;
+        // 转换为内部格式
+        const history = result.data.map(item => {
+          const nums = item.opencode.split(',').map(Number);
+          const sum = nums.reduce((a, b) => a + b, 0);
+          return {
+            period: item.expect, // 使用真实期号（如 20251211093）
+            a: nums[0],
+            b: nums[1],
+            c: nums[2],
+            sum
+          };
+        });
 
-        // 更新核心显示
-        updateCore({ a: nums[0], b: nums[1], c: nums[2], sum, period: issue });
+        const latest = history[0];
+        const stats = calculateStats(history);
 
-        // 显示历史（只显示最新一期）
-        document.getElementById('history-list').innerHTML = `
-          <div class="history-row">
-            <div class="issue-col">第${issue}期</div>
-            <div class="balls-col">${nums.join('+')}</div>
-            <div class="sum-col ${getSumClass(sum)}">${sum}</div>
-          </div>
-        `;
+        updateCore(latest);
+        renderHistory(history);
+        renderStats(stats);
 
-        console.log('✅ 真实数据加载成功:', { issue, nums, sum });
+        console.log('✅ 真实历史数据加载成功，共', history.length, '期');
         return true;
       } catch (err) {
-        console.warn('⚠️ 获取真实数据失败，使用模拟数据:', err.message);
+        console.warn('⚠️ 加载真实数据失败，回退到模拟数据:', err.message);
+        useFakeData();
         return false;
       }
+    }
+
+    function calculateStats(history) {
+      const freq = new Array(28).fill(0);
+      let totalSum = 0, odd = 0, even = 0, big = 0, small = 0;
+
+      history.forEach(h => {
+        freq[h.sum]++;
+        totalSum += h.sum;
+        if (h.sum % 2 === 1) odd++; else even++;
+        if (h.sum >= 14) big++; else small++;
+      });
+
+      let hot = 0, cold = 0;
+      for (let i = 1; i <= 27; i++) {
+        if (freq[i] > freq[hot]) hot = i;
+        if (freq[i] < freq[cold]) cold = i;
+      }
+
+      const avg = (totalSum / history.length).toFixed(1);
+      const recent = history.slice(0, 20);
+      const span = Math.max(...recent.map(h => h.sum)) - Math.min(...recent.map(h => h.sum));
+
+      return {
+        hot: String(hot).padStart(2, '0'),
+        cold: String(cold).padStart(2, '0'),
+        odd: `${Math.round(odd / history.length * 100)}%`,
+        even: `${Math.round(even / history.length * 100)}%`,
+        big: `${Math.round(big / history.length * 100)}%`,
+        small: `${Math.round(small / history.length * 100)}%`,
+        avg,
+        span
+      };
     }
 
     function getSumClass(sum) {
@@ -366,53 +398,6 @@
       return 'sum-19-27';
     }
 
-    // ===== 保留你原有的函数 =====
-    function generateData() {
-      const history = [];
-      let periodBase = 3243922;
-      const freq = new Array(28).fill(0);
-      let totalSum = 0, odd = 0, even = 0, big = 0, small = 0;
-
-      for (let i = 0; i < 100; i++) {
-        const a = Math.floor(Math.random() * 10);
-        const b = Math.floor(Math.random() * 10);
-        const c = Math.floor(Math.random() * 10);
-        const sum = a + b + c;
-        totalSum += sum;
-        freq[sum]++;
-
-        if (sum % 2 === 1) odd++; else even++;
-        if (sum >= 14) big++; else small++;
-
-        history.push({ period: periodBase - i, a, b, c, sum });
-      }
-
-      let hot = 0, cold = 0;
-      for (let i = 1; i <= 27; i++) {
-        if (freq[i] > freq[hot]) hot = i;
-        if (freq[i] < freq[cold]) cold = i;
-      }
-
-      const avg = (totalSum / 100).toFixed(1);
-      const recent = history.slice(0, 20);
-      const span = Math.max(...recent.map(h => h.sum)) - Math.min(...recent.map(h => h.sum));
-
-      return {
-        latest: history[0],
-        history: history.slice(0, 50),
-        stats: {
-          hot: String(hot).padStart(2, '0'),
-          cold: String(cold).padStart(2, '0'),
-          odd: `${Math.round(odd / 100 * 100)}%`,
-          even: `${Math.round(even / 100 * 100)}%`,
-          big: `${Math.round(big / 100 * 100)}%`,
-          small: `${Math.round(small / 100 * 100)}%`,
-          avg,
-          span
-        }
-      };
-    }
-
     function updateCore(data) {
       const { a, b, c, sum, period } = data;
       const sumEl = document.getElementById('current-sum');
@@ -420,7 +405,6 @@
       setTimeout(() => {
         sumEl.textContent = String(sum).padStart(2, '0');
         sumEl.style.opacity = '1';
-        sumEl.style.textShadow = '0 0 15px var(--neon), 0 0 30px rgba(0, 247, 255, 0.8)';
         document.getElementById('current-issue').textContent = period;
         document.getElementById('current-balls').textContent = `${a} + ${b} + ${c}`;
       }, 300);
@@ -444,21 +428,28 @@
       });
     }
 
-    // ===== 启动逻辑 =====
-    window.addEventListener('load', async () => {
-      // 先尝试加载真实数据
-      const success = await fetchRealData();
-      
-      if (!success) {
-        // 如果失败，用模拟数据
-        const fake = generateData();
-        updateCore(fake.latest);
-        renderHistory(fake.history);
-        renderStats(fake.stats);
+    // 模拟数据（备用）
+    function useFakeData() {
+      const history = [];
+      let periodBase = 3243922;
+      for (let i = 0; i < 50; i++) {
+        const a = Math.floor(Math.random() * 10);
+        const b = Math.floor(Math.random() * 10);
+        const c = Math.floor(Math.random() * 10);
+        const sum = a + b + c;
+        history.push({ period: periodBase - i, a, b, c, sum });
       }
+      const latest = history[0];
+      const stats = calculateStats(history);
+      updateCore(latest);
+      renderHistory(history);
+      renderStats(stats);
+    }
 
-      // 每 30 秒刷新一次真实数据
-      setInterval(fetchRealData, 30000);
+    // 启动
+    window.addEventListener('load', () => {
+      fetchRealHistory(); // 首次加载
+      setInterval(fetchRealHistory, 30000); // 每30秒刷新
     });
   </script>
 </body>
