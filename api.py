@@ -31,7 +31,7 @@ def handler(request):
             "statusCode": 500,
             "body": json.dumps({"error": str(e)}),
             "headers": {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*"
-                }
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            }
         }
