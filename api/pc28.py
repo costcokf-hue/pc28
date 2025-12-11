@@ -23,7 +23,7 @@ def handler(request):
             total = sum(nums)
 
             return {
-                "statusCode": 200,
+                "statusCode": 20etesting
                 "body": json.dumps({
                     "issue": issue,
                     "numbers": nums,
